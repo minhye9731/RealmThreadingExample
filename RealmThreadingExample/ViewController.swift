@@ -107,7 +107,6 @@ class ViewController: UIViewController {
             self.peopleList.append(developer)
         }
         
-        // 0.16823697090148926 초
         localRealm.writeAsync {
             self.localRealm.add(self.peopleList)
         }
@@ -115,7 +114,7 @@ class ViewController: UIViewController {
         print("⭐️Background Thread // WriteAsync // Time: \(CFAbsoluteTimeGetCurrent() - startTime)")
     }
         
-    @objc func passRealmInstanceTapped() {// 0.0065839290618896484초 소요
+    @objc func passRealmInstanceTapped() {
         let startTime = CFAbsoluteTimeGetCurrent()
 
         // iOSDeveloper의 thread-safe한 reference 생성
@@ -127,15 +126,14 @@ class ViewController: UIViewController {
                 let otherRealm = try! Realm()
                 try! otherRealm.write {
                     guard let person = iOSDeveloperRef else { return }
-                    person.age = 20
+                    person.age = 20 // 원하는 작업
                 }
             }
         }
         print("⭐️@ThreadSafe로 thread간 realm instance 전달 Time: \(CFAbsoluteTimeGetCurrent() - startTime)")
     }
     
-    // 공식문서 보고 시키는데로 async/await 했고, 데이터 수정된다.
-    // 근데 에러남..memory read failed, thread bad access
+    // 미해결 이슈로 인한 에러 발생하고 있는 상태. realm 다음 버전에 업데이터 예정으로 참고 중
     @objc func asyncAwaitPracticeTapped() async {
         await createAndUpdatePerson()
     }
